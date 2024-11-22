@@ -5,6 +5,7 @@ let person;
 export function createPerson(personalDetails) {
     const { fullName, gender, birthDay, age, occupation } = personalDetails;
     person = { fullName, gender, birthDay, age, occupation };
+    console.log(person);
 }
 
 export function editPerson(personalDetails) {
