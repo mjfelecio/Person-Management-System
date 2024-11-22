@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Person Creator Program</title>
+  <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif">
+  <!-- Header and Description -->
+  <div class="text-center mt-4">
+    <h1>Welcome to the Person Creator Program!</h1>
+    <h6 id="description">No friends? No problem! Just insert the details you want them to have and create your own friend!</h6>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mt-4" id="root">
+    <!-- Input Person Details Card -->
+    <div class="container mw-100 w-50 mt-3 p-3" id="inputDetailsCard">
+      <h3 class="text-center mb-4" id="personalDetails">Personal Details</h3>
+      <form name="inputForm" id="inputForm">
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="fullName" placeholder="Enter their full name" required>
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+          <label for="gender" class="form-label">Gender</label>
+          <select class="form-select" id="gender" onchange="handleOtherGenders()" required>
+            <option disabled selected hidden>Select their gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Gender (Other) Textbox -->
+        <div class="mb-3" id="otherGenderField" style="display: none">
+          <label for="otherGender" class="form-label">Please specify</label>
+          <input type="text" class="form-control" id="otherGender" placeholder="Enter their gender" required>
+        </div>
+
+        <!-- Birthdate -->
+        <div class="mb-3">
+          <label for="birthdate" class="form-label">Birthdate</label>
+          <input type="date" class="form-control" id="birthdate" required>
+        </div>
+
+        <!-- Age -->
+        <div class="mb-3">
+          <label for="age" class="form-label">Age</label>
+          <input type="number" class="form-control" id="age" placeholder="Enter their age" required>
+        </div>
+
+        <!-- Occupation -->
+        <div class="mb-3">
+          <label for="occupation" class="form-label">Occupation</label>
+          <input type="text" class="form-control" id="occupation" placeholder="Enter their occupation" required>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end me-4">
+          <button type="submit" class="btn btn-primary" id="submitButton" onclick="handleSubmitDetails()">
+            Create Person
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Person Details Card -->
+    <div id="displayDetailsCard" class="container w-50 mt-5 p-4" style="display: none">
+      <h3 class="text-center mb-4" id="displayFullName">Person</h3>
+      <p><strong>Gender:</strong> <span id="displayGender"></span></p>
+      <p><strong>Birthdate:</strong> <span id="displayBirthdate"></span></p>
+      <p><strong>Age:</strong> <span id="displayAge"></span></p>
+      <p><strong>Occupation:</strong> <span id="displayOccupation"></span></p>
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-secondary me-2" onclick="showEditModal()">Edit</button>
+        <button class="btn btn-danger" onclick="handleDeletingPerson()">Delete</button>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-6">Regretting your choices huh, go on then, fix your mistakes.</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="modalBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="handleModalSubmit()">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/functions.js"></script>
+  <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
