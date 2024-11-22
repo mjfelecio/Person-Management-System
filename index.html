@@ -18,7 +18,7 @@
 		</div>
 
     <!-- Input Person Details Card -->
-    <div class="container col-5 m-3 p-3 text-bg-secondary" id="inputDetailsCard">
+    <div class="container col-12 col-md-5 m-3 p-3 rounded-3 border border-3 border-secondary shadow text-bg-light" id="inputDetailsCard">
       <h3 class="text-center" id="personalDetails">Personal Details</h3>
 			<hr>
       <form name="inputForm" id="inputForm">
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="d-flex justify-content-end me-4">
+        <div class="d-flex justify-content-end">
           <button type="submit" class="btn btn-primary" id="submitButton" onclick="handleSubmitDetails()">
             Create Person
           </button>
@@ -74,11 +74,11 @@
     </div>
 
     <!-- List of Persons Card -->
-		<div class= "col m-3 p-3 text-bg-secondary">
+		<div class="col-12 col-md m-3 p-3 rounded-3 shadow border border-3 border-secondary text-bg-light">
 			<h3 class="text-center">List of Persons</h3>
 			<hr>
-			<table class="table">
-				<thead>
+			<table class="table table-striped">
+				<thead class="">
 					<tr>
 						<th scope="col">Name</th>
 						<th scope="col">Gender</th>
@@ -88,7 +88,48 @@
 						<th scope="col">Actions</th>
 					</tr>	
 				</thead>
-				<tbody id="personTable"></tbody>
+				<tbody id="personTable">
+          <tr>
+						<td>Name</td>
+						<td>Gender</td>
+						<td>Birthday</td>
+						<td>Age</td>
+						<td>Occupation</td>
+						<td>Actions</td>
+					</tr>	
+          <tr>
+						<td>Name</td>
+						<td>Gender</td>
+						<td>Birthday</td>
+						<td>Age</td>
+						<td>Occupation</td>
+						<td>Actions</td>
+					</tr>	
+          <tr>
+						<td>Name</td>
+						<td>Gender</td>
+						<td>Birthday</td>
+						<td>Age</td>
+						<td>Occupation</td>
+						<td>Actions</td>
+					</tr>	
+          <tr>
+						<td>Name</td>
+						<td>Gender</td>
+						<td>Birthday</td>
+						<td>Age</td>
+						<td>Occupation</td>
+						<td>Actions</td>
+					</tr>	
+          <tr>
+						<td>Name</td>
+						<td>Gender</td>
+						<td>Birthday</td>
+						<td>Age</td>
+						<td>Occupation</td>
+						<td>Actions</td>
+					</tr>	
+        </tbody>
 
 				
 			</table>
