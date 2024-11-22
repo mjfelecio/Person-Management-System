@@ -18,8 +18,9 @@
 		</div>
 
     <!-- Input Person Details Card -->
-    <div class="container col-6 mw-100 w-50 m-3 p-3 text-bg-primary" id="inputDetailsCard">
-      <h3 class="text-center mb-4" id="personalDetails">Personal Details</h3>
+    <div class="container col-5 m-3 p-3 text-bg-secondary" id="inputDetailsCard">
+      <h3 class="text-center" id="personalDetails">Personal Details</h3>
+			<hr>
       <form name="inputForm" id="inputForm">
 
         <!-- Full Name -->
@@ -72,8 +73,29 @@
       </form>
     </div>
 
-    <!-- Person Details Card -->
-    <div class="container col w-50 m-3 p-4 text-bg-secondary" id="displayDetailsCard">
+    <!-- List of Persons Card -->
+		<div class= "col m-3 p-3 text-bg-secondary">
+			<h3 class="text-center">List of Persons</h3>
+			<hr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Gender</th>
+						<th scope="col">Birthday</th>
+						<th scope="col">Age</th>
+						<th scope="col">Occupation</th>
+						<th scope="col">Actions</th>
+					</tr>	
+				</thead>
+				<tbody id="personTable"></tbody>
+
+				
+			</table>
+		</div>
+
+
+    <!-- <div class="container col w-50 m-3 p-4 text-bg-secondary" id="displayDetailsCard">
       <h3 class="text-center mb-4" id="displayFullName">Person</h3>
       <p><strong>Gender:</strong> <span id="displayGender"></span></p>
       <p><strong>Birthdate:</strong> <span id="displayBirthdate"></span></p>
@@ -83,7 +105,7 @@
         <button class="btn btn-secondary me-2" onclick="showEditModal()">Edit</button>
         <button class="btn btn-danger" onclick="handleDeletingPerson()">Delete</button>
       </div>
-    </div>
+    </div> -->
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1">
