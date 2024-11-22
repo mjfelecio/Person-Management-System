@@ -2,12 +2,14 @@
 let personList;
 let person;
 
-export function createPerson(fullName, gender, birthDay, age, occupation) {
+export function createPerson(personalDetails) {
+    const { fullName, gender, birthDay, age, occupation } = personalDetails;
     person = { fullName, gender, birthDay, age, occupation };
 }
 
-export function editPerson(name, gender, birthDay, age, occupation) {
-    person.fullName = name;
+export function editPerson(personalDetails) {
+    const { fullName, gender, birthDay, age, occupation } = personalDetails;
+    person.fullName = fullName;
     person.gender = gender;
     person.birthDay = birthDay;
     person.age = age;
