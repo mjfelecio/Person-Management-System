@@ -38,6 +38,23 @@ function addPersonToTable() {
     tableBody.innerHTML = row;
 }
 
+function generateUniqueID(person) {
+    const { fullName, gender, birthDay, age, occupation } = person;
+
+    const combinedString = `${fullName}${gender}${birthDay}${age}${occupation}`;
+
+    // A simple hash function I stole from geeksforgeeks
+    let hash = 0;
+    for (let i = 0; i < combinedString.length; i++) {
+        const charCode = combinedString.charCodeAt(i);
+        hash = (hash << 5) - hash + charCode;
+        hash = hash & hash;
+    }
+
+    return Math.abs(hash).toString(); // Ensure positive value and return as string
+}
+
+
 
 
 
