@@ -4,12 +4,12 @@ let isOtherGenderSelected;
 
 
 export function handleSubmitDetails() {
-    const personalDetails = fetchFormInputs();
+    const personalDetails = getFormInputs();
 
     createPerson(personalDetails);
 }
 
-function fetchFormInputs() {
+function getFormInputs() {
     return {
         fullName: document.getElementById("fullName").value,
         gender: isOtherGenderSelected
@@ -50,5 +50,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
         handleSubmitDetails();
     });
-
 });
