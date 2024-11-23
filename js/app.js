@@ -22,35 +22,8 @@ function getFormInputs() {
 }
 
 //
-document.getElementById("gender").addEventListener("change", (e) => {
-    const otherGenderField = document.getElementById("otherGenderField");
-    const otherGenderInput = document.getElementById("otherGender");
 
-    if (e.target.value === "other") {
-        otherGenderField.style.display = "block";
-        otherGenderInput.setAttribute("required", true);
-        isOtherGenderSelected = true;
-    } else {
-        otherGenderField.style.display = "none";
-        otherGenderInput.removeAttribute("required");
-        isOtherGenderSelected = false;
-    }
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const inputForm = document.getElementById("inputForm");
-    inputForm.addEventListener("submit", (e) => {
-        e.preventDefault(); // Prevent form submission refreshing the page because its annoying
-
-        // Use the built in validity functions to check validity of the inputs in form
-        if (!inputForm.checkValidity()) {
-            inputForm.reportValidity(); // Shows validation errors in the UI
-            return;
-        }
-
-        handleSubmitDetails();
-    });
-});
 
 function addPersonToTable() {
     const { fullName, gender, birthDay, age, occupation } = getPersonalDetails();
@@ -66,3 +39,32 @@ function addPersonToTable() {
     </tr>`;
     tableBody.innerHTML = row;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("inputForm").addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent form submission refreshing the page because its annoying
+
+        // Use the built in validity functions to check validity of the inputs in form
+        if (!inputForm.checkValidity()) {
+            inputForm.reportValidity(); // Shows validation errors in the UI
+            return;
+        }
+
+        handleSubmitDetails();
+    });
+
+    document.getElementById("gender").addEventListener("change", (e) => {
+        const otherGenderField = document.getElementById("otherGenderField");
+        const otherGenderInput = document.getElementById("otherGender");
+    
+        if (e.target.value === "other") {
+            otherGenderField.style.display = "block";
+            otherGenderInput.setAttribute("required", true);
+            isOtherGenderSelected = true;
+        } else {
+            otherGenderField.style.display = "none";
+            otherGenderInput.removeAttribute("required");
+            isOtherGenderSelected = false;
+        }
+    });
+});
