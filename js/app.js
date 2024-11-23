@@ -1,4 +1,4 @@
-import { createPerson, getPersonalDetails, updatePersonList } from "./person.js";
+import { createPerson, getPersonalDetails } from "./person.js";
 
 let isOtherGenderSelected;
 
