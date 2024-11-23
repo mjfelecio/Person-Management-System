@@ -1,109 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Person Creator Program</title>
-  <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-</head>
-<body style="font-family: Arial, Helvetica, sans-serif">
-  
-  <!-- Main Container -->
-  <div class="container-fluid row m-3" id="container">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Person Creator Program</title>
+    <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css" />
+  </head>
+  <body style="font-family: Arial, Helvetica, sans-serif">
+    <!-- Main Container -->
+    <div class="container-fluid row m-3" id="container">
+      <!-- Header and Description -->
+      <div class="text-center mt-4">
+        <h1>Welcome to the Person Creator Program!</h1>
+        <h6 id="description">
+          No friends? No problem! Just insert the details you want them to have
+          and create your own friend!
+        </h6>
+      </div>
 
-    <!-- Header and Description -->
-		<div class="text-center mt-4">
-			<h1>Welcome to the Person Creator Program!</h1>
-			<h6 id="description">No friends? No problem! Just insert the details you want them to have and create your own friend!</h6>
-		</div>
+      <!-- Input Person Details Card -->
+      <div
+        class="container col-12 col-md-5 m-3 p-3 rounded-3 border border-3 border-secondary shadow text-bg-light"
+        id="inputDetailsCard"
+      >
+        <h3 class="text-center" id="personalDetails">Personal Details</h3>
+        <hr />
+        <form name="inputForm" id="inputForm">
+          <!-- Full Name -->
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fullName"
+              placeholder="Enter their full name"
+              required
+              autofocus
+            />
+          </div>
 
-    <!-- Input Person Details Card -->
-    <div class="container col-12 col-md-5 m-3 p-3 rounded-3 border border-3 border-secondary shadow text-bg-light" id="inputDetailsCard">
-      <h3 class="text-center" id="personalDetails">Personal Details</h3>
-			<hr>
-      <form name="inputForm" id="inputForm">
+          <!-- Gender -->
+          <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" id="gender" required>
+              <option disabled selected hidden>Select their gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-        <!-- Full Name -->
-        <div class="mb-3">
-          <label for="fullName" class="form-label">Full Name</label>
-          <input type="text" class="form-control" id="fullName" placeholder="Enter their full name" required>
-        </div>
+          <!-- Gender (Other) Textbox -->
+          <div class="mb-3" id="otherGenderField" style="display: none">
+            <label for="otherGender" class="form-label">Please specify</label>
+            <input
+              type="text"
+              class="form-control"
+              id="otherGender"
+              placeholder="Enter their gender"
+              required
+            />
+          </div>
 
-        <!-- Gender -->
-        <div class="mb-3">
-          <label for="gender" class="form-label">Gender</label>
-          <select class="form-select" id="gender" required>
-            <option disabled selected hidden>Select their gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
+          <!-- Birthdate -->
+          <div class="mb-3">
+            <label for="birthDay" class="form-label">Birthdate</label>
+            <input type="date" class="form-control" id="birthDay" required />
+          </div>
 
-        <!-- Gender (Other) Textbox -->
-        <div class="mb-3" id="otherGenderField" style="display: none">
-          <label for="otherGender" class="form-label">Please specify</label>
-          <input type="text" class="form-control" id="otherGender" placeholder="Enter their gender" required>
-        </div>
+          <!-- Age -->
+          <div class="mb-3">
+            <label for="age" class="form-label">Age</label>
+            <input
+              type="number"
+              class="form-control"
+              id="age"
+              placeholder="Enter their age"
+              required
+            />
+          </div>
 
-        <!-- Birthdate -->
-        <div class="mb-3">
-          <label for="birthDay" class="form-label">Birthdate</label>
-          <input type="date" class="form-control" id="birthDay" required>
-        </div>
+          <!-- Occupation -->
+          <div class="mb-3">
+            <label for="occupation" class="form-label">Occupation</label>
+            <input
+              type="text"
+              class="form-control"
+              id="occupation"
+              placeholder="Enter their occupation"
+              required
+            />
+          </div>
 
-        <!-- Age -->
-        <div class="mb-3">
-          <label for="age" class="form-label">Age</label>
-          <input type="number" class="form-control" id="age" placeholder="Enter their age" required>
-        </div>
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary" id="submitButton">
+              Create Person
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <!-- Occupation -->
-        <div class="mb-3">
-          <label for="occupation" class="form-label">Occupation</label>
-          <input type="text" class="form-control" id="occupation" placeholder="Enter their occupation" required>
-        </div>
+      <!-- List of Persons Card -->
+      <div
+        class="col-12 col-md m-3 p-3 rounded-3 shadow border border-3 border-secondary text-bg-light"
+      >
+        <h3 class="text-center">List of Persons</h3>
+        <hr />
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Gender</th>
+              <th scope="col">Birthday</th>
+              <th scope="col">Age</th>
+              <th scope="col">Occupation</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td>Name</td>
+              <td>Gender</td>
+              <td>Birthday</td>
+              <td>Age</td>
+              <td>Occupation</td>
+              <td>Actions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <!-- Submit Button -->
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary" id="submitButton">
-            Create Person
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- List of Persons Card -->
-		<div class="col-12 col-md m-3 p-3 rounded-3 shadow border border-3 border-secondary text-bg-light">
-			<h3 class="text-center">List of Persons</h3>
-			<hr>
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th scope="col">Name</th>
-						<th scope="col">Gender</th>
-						<th scope="col">Birthday</th>
-						<th scope="col">Age</th>
-						<th scope="col">Occupation</th>
-						<th scope="col">Actions</th>
-					</tr>	
-				</thead>
-				<tbody id="personTable">
-          <tr>
-						<td>Name</td>
-						<td>Gender</td>
-						<td>Birthday</td>
-						<td>Age</td>
-						<td>Occupation</td>
-						<td>Actions</td>
-					</tr>	
-        </tbody>
-
-			</table>
-		</div>
-
-
-    <!-- <div class="container col w-50 m-3 p-4 text-bg-secondary" id="displayDetailsCard">
+      <!-- <div class="container col w-50 m-3 p-4 text-bg-secondary" id="displayDetailsCard">
       <h3 class="text-center mb-4" id="displayFullName">Person</h3>
       <p><strong>Gender:</strong> <span id="displayGender"></span></p>
       <p><strong>Birthdate:</strong> <span id="displayBirthdate"></span></p>
@@ -115,25 +143,43 @@
       </div>
     </div> -->
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-6">Regretting your choices huh, go on then, fix your mistakes.</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body" id="modalBody"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="handleModalSubmit()">Save changes</button>
+      <!-- Edit Modal -->
+      <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-6">
+                Regretting your choices huh, go on then, fix your mistakes.
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="handleModalSubmit()"
+              >
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="/js/app.js"></script>
-  <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script type="module" src="/js/app.js"></script>
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

@@ -20,3 +20,7 @@ export function editPerson(personalDetails) {
 export function deletePerson() {
     person = null;
 }
+
+export function getPersonalDetails() {
+    return person;
+}
