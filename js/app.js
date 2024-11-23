@@ -34,6 +34,10 @@ function addPersonToTable() {
         <td>${birthDay}</td>
         <td>${age}</td>
         <td>${occupation}</td>
+        <td>
+            <button class="btn btn-primary"">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+        </td>
     </tr>`;
     tableBody.innerHTML = row;
 }
@@ -54,26 +58,6 @@ function generateUniqueID(person) {
     return Math.abs(hash).toString(); // Ensure positive value and return as string
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {
         e.preventDefault(); // Prevent form submission refreshing the page because its annoying
@@ -90,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gender").addEventListener("change", (e) => {
         const otherGenderField = document.getElementById("otherGenderField");
         const otherGenderInput = document.getElementById("otherGender");
-    
+
         if (e.target.value === "other") {
             otherGenderField.style.display = "block";
             otherGenderInput.setAttribute("required", true);
