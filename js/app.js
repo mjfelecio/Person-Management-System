@@ -1,9 +1,11 @@
-import { createPerson, getPersonalDetails } from "./person.js";
+import { createPerson, getPersonalDetails, updatePersonList } from "./person.js";
 
 let isOtherGenderSelected;
 
 export function handleSubmitDetails() {
     const personalDetails = getFormInputs();
+
+    // validateInputs();
 
     createPerson(personalDetails);
     addPersonToTable();
@@ -21,10 +23,6 @@ function getFormInputs() {
     };
 }
 
-//
-
-
-
 function addPersonToTable() {
     const { fullName, gender, birthDay, age, occupation } = getPersonalDetails();
     const tableBody = document.getElementById("tableBody");
@@ -39,6 +37,25 @@ function addPersonToTable() {
     </tr>`;
     tableBody.innerHTML = row;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {

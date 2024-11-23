@@ -1,11 +1,11 @@
 
-let personList;
+let personList = [];
 let person;
 
 export function createPerson(personalDetails) {
     const { fullName, gender, birthDay, age, occupation } = personalDetails;
     person = { fullName, gender, birthDay, age, occupation };
-    console.log(person);
+    personList.push(person);
 }
 
 export function editPerson(personalDetails) {
