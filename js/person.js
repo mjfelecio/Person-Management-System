@@ -27,6 +27,10 @@ export function getPersonalDetails() {
     return person;
 }
 
+export function getPersonByID(personID) {
+    return personList.get(personID);
+}
+
 export function addPersonToList(personID, person) {
     if (!personList.has(personID)) {
         personList.set(personID, person);

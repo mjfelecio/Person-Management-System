@@ -1,4 +1,10 @@
-import { createPerson, generateUniqueID, getPersonalDetails, isPersonOnList } from "./person.js";
+import {
+    createPerson,
+    generateUniqueID,
+    getPersonalDetails,
+    getPersonByID,
+    isPersonOnList,
+} from "./person.js";
 
 let isOtherGenderSelected;
 
@@ -14,7 +20,6 @@ export function handleSubmitDetails() {
         console.log("This person already exists.");
         return;
     }
-    
 }
 
 function getFormInputs() {
@@ -30,11 +35,11 @@ function getFormInputs() {
 }
 
 function addPersonToTable() {
-    const { fullName, gender, birthDay, age, occupation } = getPersonalDetails();
+    const { fullName, gender, birthDay, age, occupation } =
+        getPersonalDetails();
     const person = getPersonalDetails();
     const personID = generateUniqueID(person);
     const tableBody = document.getElementById("tableBody");
-    
 
     let row = tableBody.innerHTML;
     row += `<tr>
@@ -51,7 +56,7 @@ function addPersonToTable() {
     tableBody.innerHTML = row;
 }
 
-function handleEditPerson() {
+function handleEditPerson(personID) {
     /*
         Intended function:
         When I click the edit button it opens an edit modal
@@ -63,24 +68,36 @@ function handleEditPerson() {
     // Fetch the persons details
     // Add the details into the modal
     // Show the modal
+
+    const editCard = initializeEditCard(); // Prepare the editCard before inserting it into the modal
+    const populatedEditCard = populateEditForm(personID); // Fills the form inside the card with the persons details
+
     showEditModal();
 }
 
-function showEditModal() {
+function showEditModal(editCard) {
+    const modalBody = document.getElementById("modalBody");
+    modalBody.innerHTML = "";
+    modalBody.appendChild(editCard);
+
+    const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+    editModal.show();
+}
+
+function initializeEditCard() {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
-    const clonedInputCard = inputDetailsCard.cloneNode(true);
+    const editCard = inputDetailsCard.cloneNode(true);
+    let isOtherGenderSelected;
 
-    // Modify the cloned card before inserting it into the modal
-    clonedInputCard.querySelector("#inputForm").reset(); // Clear the cloned form inputs
-    clonedInputCard.classList.value = ""; // Clear the classlist to remove the bootstrap classes
-    clonedInputCard.querySelector("#detailsCardHeader").style.display = "none";
-    clonedInputCard.querySelector("#headerSeparator").style.display = "none";
-    clonedInputCard.querySelector("#submitButton").style.display = "none";
+    editCard.querySelector("#inputForm").reset(); // Clear the cloned form inputs
+    editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
+    editCard.querySelector("#detailsCardHeader").style.display = "none";
+    editCard.querySelector("#headerSeparator").style.display = "none";
+    editCard.querySelector("#submitButton").style.display = "none";
 
-    // Attach the gender change listener to the cloned card
-    const clonedGenderField = clonedInputCard.querySelector("#gender");
-    const clonedOtherGenderField = clonedInputCard.querySelector("#otherGenderField");
-    const clonedOtherGenderInput = clonedInputCard.querySelector("#otherGender");
+    const clonedGenderField = editCard.querySelector("#gender");
+    const clonedOtherGenderField = editCard.querySelector("#otherGenderField");
+    const clonedOtherGenderInput = editCard.querySelector("#otherGender");
 
     clonedGenderField.addEventListener("change", (e) => {
         if (e.target.value === "other") {
@@ -94,14 +111,32 @@ function showEditModal() {
         }
     });
 
-    const modalBody = document.getElementById("modalBody");
-    modalBody.innerHTML = "";
-    modalBody.appendChild(clonedInputCard);
-
-    const editModal = new bootstrap.Modal(document.getElementById("editModal"));
-    editModal.show();
+    return editCard;
 }
 
+function populateEditForm(personID) {
+    const form = editCard.querySelector("#inputForm");
+    const otherGenderField = form.querySelector("otherGenderField");
+    const { fullName, gender, birthDay, age, occupation } =
+        getPersonByID(personID);
+
+    form.querySelector("fullName").innerHTML = fullName;
+    form.querySelector("birthDay").innerHTML = birthDay;
+    form.querySelector("age").innerHTML = age;
+    form.querySelector("occupation").innerHTML = occupation;
+
+    let selectedGender;
+    if (gender === "male") {
+        selectedGender = "male";
+    } else if (gender === "female") {
+        selectedGender = "female";
+    } else {
+        selectedGender = "other";
+        otherGenderField.innerHTML = gender;
+    }
+
+    form.querySelector("gender").value = selectedGender;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {
@@ -132,6 +167,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("edit-test").addEventListener("click", (e) => {
-        handleEditPerson();
+        let personID = generateUniqueID(getPersonalDetails());
+        // let personID = this.dataset.personId;
+
+        handleEditPerson(personID);
     });
 });
