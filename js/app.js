@@ -49,11 +49,12 @@ function addPersonToTable() {
         <td>${age}</td>
         <td>${occupation}</td>
         <td>
-            <button class="btn btn-primary" data-person-id="${personID}">Edit</button>
-            <button class="btn btn-danger" data-person-id="${personID}">Delete</button>
+            <button class="editButton btn btn-primary" data-person-id="${personID}">Edit</button>
+            <button class="deleteButton btn btn-danger" data-person-id="${personID}">Delete</button>
         </td>
     </tr>`;
     tableBody.innerHTML = row;
+    attachButtonHandlers();
 }
 
 function handleEditPerson(personID) {
@@ -70,9 +71,9 @@ function handleEditPerson(personID) {
     // Show the modal
 
     const editCard = initializeEditCard(); // Prepare the editCard before inserting it into the modal
-    const populatedEditCard = populateEditForm(personID); // Fills the form inside the card with the persons details
+    const populatedEditCard = populateEditForm(editCard, personID); // Fills the form inside the card with the persons details
 
-    showEditModal();
+    showEditModal(populatedEditCard);
 }
 
 function showEditModal(editCard) {
@@ -114,16 +115,16 @@ function initializeEditCard() {
     return editCard;
 }
 
-function populateEditForm(personID) {
+function populateEditForm(editCard, personID) {
     const form = editCard.querySelector("#inputForm");
-    const otherGenderField = form.querySelector("otherGenderField");
+    const otherGenderInput = form.querySelector("#otherGender");
     const { fullName, gender, birthDay, age, occupation } =
         getPersonByID(personID);
 
-    form.querySelector("fullName").innerHTML = fullName;
-    form.querySelector("birthDay").innerHTML = birthDay;
-    form.querySelector("age").innerHTML = age;
-    form.querySelector("occupation").innerHTML = occupation;
+    form.querySelector("#fullName").value = fullName;
+    form.querySelector("#birthDay").value = birthDay;
+    form.querySelector("#age").value = age;
+    form.querySelector("#occupation").value = occupation;
 
     let selectedGender;
     if (gender === "male") {
@@ -132,10 +133,12 @@ function populateEditForm(personID) {
         selectedGender = "female";
     } else {
         selectedGender = "other";
-        otherGenderField.innerHTML = gender;
+        otherGenderInput.value = gender;
     }
 
-    form.querySelector("gender").value = selectedGender;
+    form.querySelector("#gender").value = selectedGender;
+
+    return editCard;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -166,10 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById("edit-test").addEventListener("click", (e) => {
-        let personID = generateUniqueID(getPersonalDetails());
-        // let personID = this.dataset.personId;
 
-        handleEditPerson(personID);
-    });
 });
+
+function attachButtonHandlers() {
+    document.querySelectorAll('.editButton').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            let personID = this.dataset.personId;
+
+            handleEditPerson(personID);
+        });
+    });
+
+}
