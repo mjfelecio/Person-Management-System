@@ -23,8 +23,9 @@
         class="container-fluid col-12 col-md-5 m-3 p-3 rounded-3 border border-3 border-secondary shadow text-bg-light"
         id="inputDetailsCard"
       >
-        <h3 class="text-center" id="personalDetails">Personal Details</h3>
-        <hr />
+        <h3 class="text-center" id="detailsCardHeader">Personal Details</h3>
+        <button id="edit-test">Edit Test</button>
+        <hr id="headerSeparator"/>
         <form name="inputForm" id="inputForm">
           <!-- Full Name -->
           <div class="mb-3">
@@ -138,9 +139,9 @@
       <div class="modal fade" id="editModal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-6">
-                Regretting your choices huh, go on then, fix your mistakes.
+            <div class="modal-header text-center">
+              <h1 class="modal-title w-100 fs-3">
+                Edit Person
               </h1>
               <button
                 type="button"

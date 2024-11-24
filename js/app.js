@@ -1,4 +1,4 @@
-import { createPerson, getPersonalDetails, isPersonOnList } from "./person.js";
+import { createPerson, generateUniqueID, getPersonalDetails, isPersonOnList } from "./person.js";
 
 let isOtherGenderSelected;
 
@@ -31,7 +31,10 @@ function getFormInputs() {
 
 function addPersonToTable() {
     const { fullName, gender, birthDay, age, occupation } = getPersonalDetails();
+    const person = getPersonalDetails();
+    const personID = generateUniqueID(person);
     const tableBody = document.getElementById("tableBody");
+    
 
     let row = tableBody.innerHTML;
     row += `<tr>
@@ -41,13 +44,63 @@ function addPersonToTable() {
         <td>${age}</td>
         <td>${occupation}</td>
         <td>
-            <button class="btn btn-primary">Edit</button>
-            <button class="btn btn-danger">Delete</button>
+            <button class="btn btn-primary" data-person-id="${personID}">Edit</button>
+            <button class="btn btn-danger" data-person-id="${personID}">Delete</button>
         </td>
     </tr>`;
     tableBody.innerHTML = row;
 }
 
+function handleEditPerson() {
+    /*
+        Intended function:
+        When I click the edit button it opens an edit modal
+        Before that edit modal opens, I fetch the persons details using their personID
+        Then I put the detaild into the edit modal
+    */
+    // Create a new high level function above this named "handleEditPerson" that handles this
+    // And rename this function to showEditModal
+    // Fetch the persons details
+    // Add the details into the modal
+    // Show the modal
+    showEditModal();
+}
+
+function showEditModal() {
+    const inputDetailsCard = document.getElementById("inputDetailsCard");
+    const clonedInputCard = inputDetailsCard.cloneNode(true);
+
+    // Modify the cloned card before inserting it into the modal
+    clonedInputCard.querySelector("#inputForm").reset(); // Clear the cloned form inputs
+    clonedInputCard.classList.value = ""; // Clear the classlist to remove the bootstrap classes
+    clonedInputCard.querySelector("#detailsCardHeader").style.display = "none";
+    clonedInputCard.querySelector("#headerSeparator").style.display = "none";
+    clonedInputCard.querySelector("#submitButton").style.display = "none";
+
+    // Attach the gender change listener to the cloned card
+    const clonedGenderField = clonedInputCard.querySelector("#gender");
+    const clonedOtherGenderField = clonedInputCard.querySelector("#otherGenderField");
+    const clonedOtherGenderInput = clonedInputCard.querySelector("#otherGender");
+
+    clonedGenderField.addEventListener("change", (e) => {
+        if (e.target.value === "other") {
+            clonedOtherGenderField.style.display = "block";
+            clonedOtherGenderInput.setAttribute("required", true);
+            isOtherGenderSelected = true;
+        } else {
+            clonedOtherGenderField.style.display = "none";
+            clonedOtherGenderInput.removeAttribute("required");
+            isOtherGenderSelected = false;
+        }
+    });
+
+    const modalBody = document.getElementById("modalBody");
+    modalBody.innerHTML = "";
+    modalBody.appendChild(clonedInputCard);
+
+    const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+    editModal.show();
+}
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -76,5 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
             otherGenderInput.removeAttribute("required");
             isOtherGenderSelected = false;
         }
+    });
+
+    document.getElementById("edit-test").addEventListener("click", (e) => {
+        handleEditPerson();
     });
 });
