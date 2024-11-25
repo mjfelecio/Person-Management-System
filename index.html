@@ -12,14 +12,14 @@
       <div class="row g-3">
         <!-- Header -->
         <div class="col-12">
-          <div class="text-center rounded-3 border border-3 border-secondary shadow text-bg-light p-3">
+          <div class="text-center rounded-3 border border-3 border-secondary shadow text-bg-light p-1">
             <h2>Person Management System</h2>
           </div>
         </div>
 
         <!-- Input Person Details Card -->
         <div class="col-12 col-lg-5">
-          <div class="rounded-3 border border-3 border-secondary shadow text-bg-light p-3 h-100">
+          <div id="inputDetailsCard" class="rounded-3 border border-3 border-secondary shadow text-bg-light p-3 h-100">
             <h3 class="text-center" id="detailsCardHeader">Personal Details</h3>
             <hr id="headerSeparator" />
             <form name="inputForm" id="inputForm">
@@ -32,7 +32,8 @@
                   id="fullName"
                   placeholder="Enter their full name"
                   required
-                  autofocus />
+                  autofocus 
+                  />
               </div>
 
               <!-- Gender -->
