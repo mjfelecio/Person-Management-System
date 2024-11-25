@@ -8,7 +8,7 @@ import {
 
 let isOtherGenderSelected;
 
-export function handleSubmitDetails() {
+function handleCreatePerson() {
     const personalDetails = getFormInputs();
 
     // validateInputs();
@@ -57,29 +57,13 @@ function addPersonToTable() {
     attachButtonHandlers();
 }
 
-function handleEditPerson(personID) {
-    /*
-        Intended function:
-        When I click the edit button it opens an edit modal
-        Before that edit modal opens, I fetch the persons details using their personID
-        Then I put the detaild into the edit modal
-    */
-    // Create a new high level function above this named "handleEditPerson" that handles this
-    // And rename this function to showEditModal
-    // Fetch the persons details
-    // Add the details into the modal
-    // Show the modal
-
+function openEditModal(personID) {
     const editCard = initializeEditCard(); // Prepare the editCard before inserting it into the modal
     const populatedEditCard = populateEditForm(editCard, personID); // Fills the form inside the card with the persons details
 
-    showEditModal(populatedEditCard);
-}
-
-function showEditModal(editCard) {
     const modalBody = document.getElementById("modalBody");
     modalBody.innerHTML = "";
-    modalBody.appendChild(editCard);
+    modalBody.appendChild(populatedEditCard);
 
     const editModal = new bootstrap.Modal(document.getElementById("editModal"));
     editModal.show();
@@ -88,26 +72,27 @@ function showEditModal(editCard) {
 function initializeEditCard() {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
     const editCard = inputDetailsCard.cloneNode(true);
+    const genderSelector = editCard.querySelector("#gender");
+    const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
+    const otherGenderInputInModal = editCard.querySelector("#otherGender");
     let isOtherGenderSelected;
 
     editCard.querySelector("#inputForm").reset(); // Clear the cloned form inputs
     editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
+
+    // Hide unnecessary elements
     editCard.querySelector("#detailsCardHeader").style.display = "none";
     editCard.querySelector("#headerSeparator").style.display = "none";
     editCard.querySelector("#submitButton").style.display = "none";
 
-    const clonedGenderField = editCard.querySelector("#gender");
-    const clonedOtherGenderField = editCard.querySelector("#otherGenderField");
-    const clonedOtherGenderInput = editCard.querySelector("#otherGender");
-
-    clonedGenderField.addEventListener("change", (e) => {
+    genderSelector.addEventListener("change", (e) => {
         if (e.target.value === "other") {
-            clonedOtherGenderField.style.display = "block";
-            clonedOtherGenderInput.setAttribute("required", true);
+            otherGenderContainerInModal.style.display = "block";
+            otherGenderInputInModal.setAttribute("required", true);
             isOtherGenderSelected = true;
         } else {
-            clonedOtherGenderField.style.display = "none";
-            clonedOtherGenderInput.removeAttribute("required");
+            otherGenderContainerInModal.style.display = "none";
+            otherGenderInputInModal.removeAttribute("required");
             isOtherGenderSelected = false;
         }
     });
@@ -118,15 +103,9 @@ function initializeEditCard() {
 function populateEditForm(editCard, personID) {
     const form = editCard.querySelector("#inputForm");
     const otherGenderInput = form.querySelector("#otherGender");
-    const { fullName, gender, birthDay, age, occupation } =
-        getPersonByID(personID);
-
-    form.querySelector("#fullName").value = fullName;
-    form.querySelector("#birthDay").value = birthDay;
-    form.querySelector("#age").value = age;
-    form.querySelector("#occupation").value = occupation;
-
+    const { fullName, gender, birthDay, age, occupation } = getPersonByID(personID);
     let selectedGender;
+
     if (gender === "male") {
         selectedGender = "male";
     } else if (gender === "female") {
@@ -136,6 +115,10 @@ function populateEditForm(editCard, personID) {
         otherGenderInput.value = gender;
     }
 
+    form.querySelector("#fullName").value = fullName;
+    form.querySelector("#birthDay").value = birthDay;
+    form.querySelector("#age").value = age;
+    form.querySelector("#occupation").value = occupation;
     form.querySelector("#gender").value = selectedGender;
 
     return editCard;
@@ -151,35 +134,32 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        handleSubmitDetails();
+        handleCreatePerson();
     });
 
     document.getElementById("gender").addEventListener("change", (e) => {
-        const otherGenderField = document.getElementById("otherGenderField");
+        const otherGenderContainer = document.getElementById("otherGenderContainer");
         const otherGenderInput = document.getElementById("otherGender");
 
         if (e.target.value === "other") {
-            otherGenderField.style.display = "block";
+            otherGenderContainer.style.display = "block";
             otherGenderInput.setAttribute("required", true);
             isOtherGenderSelected = true;
         } else {
-            otherGenderField.style.display = "none";
+            otherGenderContainer.style.display = "none";
             otherGenderInput.removeAttribute("required");
             isOtherGenderSelected = false;
         }
     });
-
-
 });
 
 function attachButtonHandlers() {
-    document.querySelectorAll('.editButton').forEach(button => {
-        button.addEventListener('click', function(e) {
+    document.querySelectorAll(".editButton").forEach((button) => {
+        button.addEventListener("click", function (e) {
             e.preventDefault();
             let personID = this.dataset.personId;
 
-            handleEditPerson(personID);
+            openEditModal(personID);
         });
     });
-
 }
