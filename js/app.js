@@ -43,14 +43,14 @@ function addPersonToTable() {
 
     let row = tableBody.innerHTML;
     row += `<tr>
-        <td>${fullName}</td>
-        <td>${gender}</td>
-        <td>${birthDay}</td>
-        <td>${age}</td>
-        <td>${occupation}</td>
-        <td>
-            <button class="editButton btn btn-primary" data-person-id="${personID}">Edit</button>
-            <button class="deleteButton btn btn-danger" data-person-id="${personID}">Delete</button>
+        <td class="align-middle">${fullName}</td>
+        <td class="align-middle">${gender}</td>
+        <td class="align-middle">${birthDay}</td>
+        <td class="align-middle">${age}</td>
+        <td class="align-middle">${occupation}</td>
+        <td class="align-middle">
+            <button class="editButton btn btn-primary btn-sm" data-person-id="${personID}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
+            <button class="deleteButton btn btn-danger btn-sm" data-person-id="${personID}">Delete</button>
         </td>
     </tr>`;
     tableBody.innerHTML = row;
