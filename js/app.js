@@ -1,5 +1,6 @@
 import {
     createPerson,
+    editPerson,
     generateUniqueID,
     getPersonalDetails,
     getPersonByID,
@@ -7,20 +8,47 @@ import {
 } from "./person.js";
 
 let isOtherGenderSelected;
+let isOtherGenderSelectedOnModal;
 
 function handleCreatePerson() {
-    const personalDetails = getFormInputs();
+    const person = getFormInputs();
 
     // validateInputs();
 
-    if (!isPersonOnList(personalDetails)) {
-        createPerson(personalDetails);
-        addPersonToTable();
+    if (!isPersonOnList(person)) {
+        createPerson(person);
+        addPersonToTable(person);
     } else {
         console.log("This person already exists.");
         return;
     }
 }
+
+function handleEditPerson() {
+    const modalBody = document.getElementById("modalBody");
+    const personID = modalBody.dataset.editingPersonID;
+
+    // Get form inputs
+    const updatedData = {
+        fullName: document.querySelector("#modalBody #fullName").value,
+        gender: isOtherGenderSelectedOnModal
+            ? document.querySelector("#modalBody #otherGender").value
+            : document.querySelector("#modalBody #gender").value,
+        birthDay: document.querySelector("#modalBody #birthDay").value,
+        age: document.querySelector("#modalBody #age").value,
+        occupation: document.querySelector("#modalBody #occupation").value,
+    };
+
+    //validateFormInput(person);
+    editPerson(updatedData); // Edit the personal details of the person in the personlist
+
+    editPersonDataOnTable(personID, updatedData);
+
+    // Hide the modal after submission
+    const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
+    editModal.hide();
+}
+
 
 function getFormInputs() {
     return {
@@ -34,15 +62,13 @@ function getFormInputs() {
     };
 }
 
-function addPersonToTable() {
-    const { fullName, gender, birthDay, age, occupation } =
-        getPersonalDetails();
-    const person = getPersonalDetails();
+function addPersonToTable(person) {
+    const { fullName, gender, birthDay, age, occupation } = person;
     const personID = generateUniqueID(person);
     const tableBody = document.getElementById("tableBody");
 
     let row = tableBody.innerHTML;
-    row += `<tr>
+    row += `<tr class="t-row" data-row-reference-id="${personID}">
         <td class="align-middle">${fullName}</td>
         <td class="align-middle">${gender}</td>
         <td class="align-middle">${birthDay}</td>
@@ -54,7 +80,35 @@ function addPersonToTable() {
         </td>
     </tr>`;
     tableBody.innerHTML = row;
-    attachButtonHandlers();
+    attachActionButtonHandlers();
+}
+
+function editPersonDataOnTable(personID, updatedData) {
+    // Find the specific row with the matching personID
+    const targetRow = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
+    console.log(personID + " ha");
+    
+    if (!targetRow) {
+        console.error("Row not found");
+        return;
+    }
+
+    // Get all data cells (except the actions cell with the edit and delete buttons)
+    const cells = targetRow.querySelectorAll('td:not(:last-child)');
+    
+    // Map the data to match the order of cells
+    const newValues = [
+        updatedData.fullName,
+        updatedData.gender,
+        updatedData.birthDay,
+        updatedData.age,
+        updatedData.occupation
+    ];
+
+    // Update each cell's content
+    cells.forEach((cell, index) => {
+        cell.textContent = newValues[index];
+    });
 }
 
 function openEditModal(personID) {
@@ -63,6 +117,9 @@ function openEditModal(personID) {
 
     const modalBody = document.getElementById("modalBody");
     modalBody.innerHTML = "";
+
+    modalBody.dataset.editingPersonID = personID;
+
     modalBody.appendChild(populatedEditCard);
 
     const editModal = new bootstrap.Modal(document.getElementById("editModal"));
@@ -75,9 +132,11 @@ function initializeEditCard() {
     const genderSelector = editCard.querySelector("#gender");
     const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
     const otherGenderInputInModal = editCard.querySelector("#otherGender");
-    let isOtherGenderSelected;
+    const inputForm = editCard.querySelector("#inputForm");
 
-    editCard.querySelector("#inputForm").reset(); // Clear the cloned form inputs
+    inputForm.reset(); // Clear the cloned form inputs
+    inputForm.addEventListener("submit", (e) => e.preventDefault()); // Prevent the form refreshing the page
+
     editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
 
     // Hide unnecessary elements
@@ -89,11 +148,11 @@ function initializeEditCard() {
         if (e.target.value === "other") {
             otherGenderContainerInModal.style.display = "block";
             otherGenderInputInModal.setAttribute("required", true);
-            isOtherGenderSelected = true;
+            isOtherGenderSelectedOnModal = true;
         } else {
             otherGenderContainerInModal.style.display = "none";
             otherGenderInputInModal.removeAttribute("required");
-            isOtherGenderSelected = false;
+            isOtherGenderSelectedOnModal = false;
         }
     });
 
@@ -151,9 +210,15 @@ document.addEventListener("DOMContentLoaded", () => {
             isOtherGenderSelected = false;
         }
     });
+
+    document.getElementById("submitEditButton").addEventListener("click", (e) => {
+        e.preventDefault();
+
+        handleEditPerson();
+    });
 });
 
-function attachButtonHandlers() {
+function attachActionButtonHandlers() {
     document.querySelectorAll(".editButton").forEach((button) => {
         button.addEventListener("click", function (e) {
             e.preventDefault();

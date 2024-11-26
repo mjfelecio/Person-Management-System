@@ -17,6 +17,7 @@ export function editPerson(personalDetails) {
     person.birthDay = birthDay;
     person.age = age;
     person.occupation = occupation;
+    console.log(personalDetails);
 }   
 
 export function deletePerson() {
