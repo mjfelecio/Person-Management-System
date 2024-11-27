@@ -177,9 +177,9 @@ function populateEditForm(editCard, personID) {
         let selectedGender;
 
         if (gender === "male") {
-            selectedGender = "male";
+            selectedGender = "Male";
         } else if (gender === "female") {
-            selectedGender = "female";
+            selectedGender = "Female";
         } else {
             selectedGender = "other";
             otherGenderInput.value = gender;
