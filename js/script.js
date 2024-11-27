@@ -5,6 +5,10 @@ let isOtherGenderSelected;
 let isOtherGenderSelectedOnModal;
 const manager = new PersonManager();
 
+// ==================================
+//  Main Functions
+// ==================================
+
 function handleCreatePerson() {
     const personalDetails = getFormInputs();
 
@@ -47,60 +51,33 @@ function handleDeletePerson(personID) {
 }
 
 // ==================================
-//  Table Operations
+//  Form Functions
 // ==================================
 
-function addPersonToTable(personDetails) {
-    const { id, fullName, gender, birthDay, age, occupation } = personDetails;
-    const tableBody = document.getElementById("tableBody");
-
-    let row = tableBody.innerHTML;
-    row += `<tr class="t-row" data-row-reference-id="${id}">
-        <td class="align-middle">${fullName}</td>
-        <td class="align-middle">${gender}</td>
-        <td class="align-middle">${birthDay}</td>
-        <td class="align-middle">${age}</td>
-        <td class="align-middle">${occupation}</td>
-        <td class="align-middle">
-            <button class="editButton btn btn-primary btn-sm" data-person-id="${id}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
-            <button class="deleteButton btn btn-danger btn-sm" data-person-id="${id}">Delete</button>
-        </td>
-    </tr>`;
-    tableBody.innerHTML = row;
-    attachActionButtonHandlers();
+function getFormInputs() {
+    return {
+        fullName: document.getElementById("fullName").value.trim(),
+        gender: document.getElementById("gender").value === "Other"
+            ? document.getElementById("otherGender").value.trim()
+            : document.getElementById("gender").value.trim(),
+        birthDay: document.getElementById("birthDay").value.trim(),
+        occupation: document.getElementById("occupation").value.trim(),
+    };
 }
 
-function refreshTableData(personID, updatedData) {
-    // Find the specific row with the matching personID
-    const targetRow = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
-
-    if (!targetRow) {
-        throw new Error("Could not find the person's row in the table");
-    }
-
-    if (!updatedData) {
-        throw new Error("No update data provided");
-    }
-    // Get all data cells (except the actions cell with the edit and delete buttons)
-    const cells = targetRow.querySelectorAll("td:not(:last-child)");
-
-    // Map the data to match the order of cells
-    const newValues = [
-        updatedData.fullName,
-        updatedData.gender,
-        updatedData.birthDay,
-        updatedData.age,
-        updatedData.occupation,
-    ];
-
-    // Update each cell's content
-    cells.forEach((cell, index) => {
-        cell.textContent = newValues[index];
-    });
+function getUpdatedData() {
+    return {
+        fullName: document.querySelector("#modalBody #fullName").value,
+        gender: document.querySelector("#modalBody #gender").value === "Other"
+            ? document.querySelector("#modalBody #otherGender").value
+            : document.querySelector("#modalBody #gender").value,
+        birthDay: document.querySelector("#modalBody #birthDay").value,
+        occupation: document.querySelector("#modalBody #occupation").value,
+    };
 }
 
 // ==================================
-//  Modal Operations
+//  Modal Functions
 // ==================================
 
 function openEditModal(personID) {
@@ -119,7 +96,7 @@ function openEditModal(personID) {
 
 function initializeEditCard() {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
-    const editCard = inputDetailsCard.cloneNode(true); // Clone the inputCard as editCard
+    const editCard = inputDetailsCard.cloneNode(true);
 
     const genderSelector = editCard.querySelector("#gender");
     const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
@@ -180,28 +157,77 @@ function populateEditForm(editCard, personID) {
     }
 }
 
+// ==================================
+//  Table Functions
+// ==================================
 
+function addPersonToTable(personDetails) {
+    const { id, fullName, gender, birthDay, age, occupation } = personDetails;
+    const tableBody = document.getElementById("tableBody");
+
+    let row = tableBody.innerHTML;
+    row += `<tr class="t-row" data-row-reference-id="${id}">
+        <td class="align-middle">${fullName}</td>
+        <td class="align-middle">${gender}</td>
+        <td class="align-middle">${birthDay}</td>
+        <td class="align-middle">${age}</td>
+        <td class="align-middle">${occupation}</td>
+        <td class="align-middle">
+            <button class="editButton btn btn-primary btn-sm" data-person-id="${id}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
+            <button class="deleteButton btn btn-danger btn-sm" data-person-id="${id}">Delete</button>
+        </td>
+    </tr>`;
+    tableBody.innerHTML = row;
+    attachActionButtonHandlers();
+}
+
+function refreshTableData(personID, updatedData) {
+    // Find the specific row with the matching personID
+    const targetRow = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
+
+    if (!targetRow) {
+        throw new Error("Could not find the person's row in the table");
+    }
+
+    if (!updatedData) {
+        throw new Error("No update data provided");
+    }
+    // Get all data cells (except the actions cell with the edit and delete buttons)
+    const cells = targetRow.querySelectorAll("td:not(:last-child)");
+
+    // Map the data to match the order of cells
+    const newValues = [
+        updatedData.fullName,
+        updatedData.gender,
+        updatedData.birthDay,
+        updatedData.age,
+        updatedData.occupation,
+    ];
+
+    // Update each cell's content
+    cells.forEach((cell, index) => {
+        cell.textContent = newValues[index];
+    });
+}
 
 // ==================================
-//  Event Listener Operations
+//  Event Handlers
 // ==================================
+
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {
-        e.preventDefault(); // Prevent form submission refreshing the page because its annoying
+        e.preventDefault();
 
         // Use the built in validity functions to check validity of the inputs in form
         if (!inputForm.checkValidity()) {
             inputForm.reportValidity(); // Shows validation errors in the UI
             return;
         }
-
         handleCreatePerson();
     });
 
     document.getElementById("gender").addEventListener("change", (e) => {
-        const otherGenderContainer = document.getElementById(
-            "otherGenderContainer"
-        );
+        const otherGenderContainer = document.getElementById("otherGenderContainer");
         const otherGenderInput = document.getElementById("otherGender");
 
         if (e.target.value === "Other") {
@@ -215,13 +241,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document
-        .getElementById("submitEditButton")
-        .addEventListener("click", (e) => {
-            e.preventDefault();
-
-            handleEditPerson();
-        });
+    document.getElementById("submitEditButton").addEventListener("click", (e) => {
+        e.preventDefault();
+        handleEditPerson();
+    });
 });
 
 function attachActionButtonHandlers() {
