@@ -1,5 +1,5 @@
 import { PersonManager } from "./personManager.js";
-import { getFormInputs, getUpdatedData } from "./utilities.js";
+import { getFormInputs } from "./utilities.js";
 
 let isOtherGenderSelected;
 let isOtherGenderSelectedOnModal;
@@ -21,7 +21,7 @@ function handleEditPerson() {
     const modalBody = document.getElementById("modalBody");
     const personID = modalBody.dataset.editingPersonID; // Gets the id of the person getting edited 
 
-    const updatedData = getUpdatedData();
+    const updatedData = getFormInputs(true);
 
     try {
         const updatedPerson = manager.updatePerson(personID, updatedData);
@@ -179,6 +179,8 @@ function populateEditForm(editCard, personID) {
         return editCard;
     }
 }
+
+
 
 // ==================================
 //  Event Listener Operations
