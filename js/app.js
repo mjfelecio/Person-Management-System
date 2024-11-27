@@ -152,7 +152,7 @@ function initializeEditCard() {
     editCard.querySelector("#submitButton").style.display = "none";
 
     genderSelector.addEventListener("change", (e) => {
-        if (e.target.value === "other") {
+        if (e.target.value === "Other") {
             otherGenderContainerInModal.style.display = "block";
             otherGenderInputInModal.setAttribute("required", true);
             isOtherGenderSelectedOnModal = true;
@@ -172,16 +172,16 @@ function populateEditForm(editCard, personID) {
 
     try {
         const person = manager.getPerson(personID);
-        const { fullName, gender, birthDay, age, occupation } =
+        const { fullName, gender, birthDay, occupation } =
             person.getDetails();
         let selectedGender;
 
-        if (gender === "male") {
+        if (gender === "Male") {
             selectedGender = "Male";
-        } else if (gender === "female") {
+        } else if (gender === "Female") {
             selectedGender = "Female";
         } else {
-            selectedGender = "other";
+            selectedGender = "Other";
             otherGenderInput.value = gender;
         }
 
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const otherGenderInput = document.getElementById("otherGender");
 
-        if (e.target.value === "other") {
+        if (e.target.value === "Other") {
             otherGenderContainer.style.display = "block";
             otherGenderInput.setAttribute("required", true);
             isOtherGenderSelected = true;
