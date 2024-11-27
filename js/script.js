@@ -1,6 +1,7 @@
 import { PersonManager } from "./personManager.js";
 
 const manager = new PersonManager();
+let isOtherGenderSelected;
 
 // ==================================
 //  Main Functions
@@ -63,6 +64,14 @@ function getFormInputs() {
 }
 
 function getUpdatedData() {
+    const editForm = document.querySelector("#modalBody #inputForm");
+
+    // Use the built in validity functions to check validity of the inputs in form
+    if (!editForm.checkValidity()) {
+        editForm.reportValidity(); // Shows validation errors in the UI
+        throw new Error("Error getting data, form is incomplete")
+    }
+
     return {
         fullName: document.querySelector("#modalBody #fullName").value,
         gender: document.querySelector("#modalBody #gender").value === "Other"
@@ -131,6 +140,7 @@ function populateEditForm(editForm, personID) {
                 otherGenderInput.style.display = "block";
             }
         }
+        
     } catch (error) {
         console.error("Error populating form:", error.message);
     }
@@ -187,7 +197,7 @@ function refreshTableData(personID, updatedData) {
     if (!updatedData) {
         throw new Error("No update data provided");
     }
-    // Get all data cells (except the actions cell with the edit and delete buttons)
+    // Get all data cells (except the actions column with the edit and delete buttons)
     const cells = targetRow.querySelectorAll("td:not(:last-child)");
 
     // Map the data to match the order of cells
@@ -202,6 +212,26 @@ function refreshTableData(personID, updatedData) {
     // Update each cell's content
     cells.forEach((cell, index) => {
         cell.textContent = newValues[index];
+    });
+}
+
+function attachActionButtonHandlers() {
+    document.querySelectorAll(".editButton").forEach((button) => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const personID = this.dataset.personId;
+
+            openEditModal(personID);
+        });
+    });
+
+    document.querySelectorAll(".deleteButton").forEach((button) => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const personID = this.dataset.personId;
+
+            handleDeletePerson(personID);
+        });
     });
 }
 
@@ -242,22 +272,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function attachActionButtonHandlers() {
-    document.querySelectorAll(".editButton").forEach((button) => {
-        button.addEventListener("click", function (e) {
-            e.preventDefault();
-            let personID = this.dataset.personId;
 
-            openEditModal(personID);
-        });
-    });
-
-    document.querySelectorAll(".deleteButton").forEach((button) => {
-        button.addEventListener("click", function (e) {
-            e.preventDefault();
-            let personID = this.dataset.personId;
-
-            handleDeletePerson(personID);
-        });
-    });
-}
