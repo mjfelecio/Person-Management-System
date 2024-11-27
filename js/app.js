@@ -1,4 +1,5 @@
 import { PersonManager } from "./personManager.js";
+import { getFormInputs, getUpdatedData } from "./utilities.js";
 
 let isOtherGenderSelected;
 let isOtherGenderSelectedOnModal;
@@ -18,24 +19,15 @@ function handleCreatePerson() {
 
 function handleEditPerson() {
     const modalBody = document.getElementById("modalBody");
-    const personID = modalBody.dataset.editingPersonID;
+    const personID = modalBody.dataset.editingPersonID; // Gets the id of the person getting edited 
 
-    const updatedData = {
-        fullName: document.querySelector("#modalBody #fullName").value,
-        gender: isOtherGenderSelectedOnModal
-            ? document.querySelector("#modalBody #otherGender").value
-            : document.querySelector("#modalBody #gender").value,
-        birthDay: document.querySelector("#modalBody #birthDay").value,
-        occupation: document.querySelector("#modalBody #occupation").value,
-    };
+    const updatedData = getUpdatedData();
 
     try {
         const updatedPerson = manager.updatePerson(personID, updatedData);
-        editPersonDataOnTable(personID, updatedPerson.getDetails());
+        refreshTableData(personID, updatedPerson.getDetails());
 
-        const editModal = bootstrap.Modal.getInstance(
-            document.getElementById("editModal")
-        );
+        const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
         editModal.hide();
     } catch (error) {
         console.error("Error updating person:", error.message);
@@ -54,17 +46,9 @@ function handleDeletePerson(personID) {
     }
 }
 
-function getFormInputs() {
-    // validate this using validateFormInput before returning
-    return {
-        fullName: document.getElementById("fullName").value.trim(),
-        gender: isOtherGenderSelected
-            ? document.getElementById("otherGender").value.trim()
-            : document.getElementById("gender").value.trim(),
-        birthDay: document.getElementById("birthDay").value.trim(),
-        occupation: document.getElementById("occupation").value.trim(),
-    };
-}
+// ==================================
+//  Table Operations
+// ==================================
 
 function addPersonToTable(personDetails) {
     const { id, fullName, gender, birthDay, age, occupation } = personDetails;
@@ -86,18 +70,17 @@ function addPersonToTable(personDetails) {
     attachActionButtonHandlers();
 }
 
-function editPersonDataOnTable(personID, updatedData) {
+function refreshTableData(personID, updatedData) {
     // Find the specific row with the matching personID
-    const targetRow = document.querySelector(
-        `tr[data-row-reference-id="${personID}"]`
-    );
-    console.log(personID + " ha");
+    const targetRow = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
 
     if (!targetRow) {
-        console.error("Row not found");
-        return;
+        throw new Error("Could not find the person's row in the table");
     }
 
+    if (!updatedData) {
+        throw new Error("No update data provided");
+    }
     // Get all data cells (except the actions cell with the edit and delete buttons)
     const cells = targetRow.querySelectorAll("td:not(:last-child)");
 
@@ -116,14 +99,17 @@ function editPersonDataOnTable(personID, updatedData) {
     });
 }
 
+// ==================================
+//  Modal Operations
+// ==================================
+
 function openEditModal(personID) {
     const editCard = initializeEditCard(); // Prepare the editCard before inserting it into the modal
     const populatedEditCard = populateEditForm(editCard, personID); // Fills the form inside the card with the persons details
 
     const modalBody = document.getElementById("modalBody");
     modalBody.innerHTML = "";
-
-    modalBody.dataset.editingPersonID = personID;
+    modalBody.dataset.editingPersonID = personID; // Stores the id of the person getting edited
 
     modalBody.appendChild(populatedEditCard);
 
@@ -133,20 +119,18 @@ function openEditModal(personID) {
 
 function initializeEditCard() {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
-    const editCard = inputDetailsCard.cloneNode(true);
-    const genderSelector = editCard.querySelector("#gender");
-    const otherGenderContainerInModal = editCard.querySelector(
-        "#otherGenderContainer"
-    );
-    const otherGenderInputInModal = editCard.querySelector("#otherGender");
-    const inputForm = editCard.querySelector("#inputForm");
+    const editCard = inputDetailsCard.cloneNode(true); // Clone the inputCard as editCard
 
-    inputForm.reset(); // Clear the cloned form inputs
+    const genderSelector = editCard.querySelector("#gender");
+    const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
+    const otherGenderInputInModal = editCard.querySelector("#otherGender");
+
+    const inputForm = editCard.querySelector("#inputForm");
+    inputForm.reset(); // Clear the form inputs
     inputForm.addEventListener("submit", (e) => e.preventDefault()); // Prevent the form refreshing the page
 
-    editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
-
     // Hide unnecessary elements
+    editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
     editCard.querySelector("#detailsCardHeader").style.display = "none";
     editCard.querySelector("#headerSeparator").style.display = "none";
     editCard.querySelector("#submitButton").style.display = "none";
@@ -172,8 +156,7 @@ function populateEditForm(editCard, personID) {
 
     try {
         const person = manager.getPerson(personID);
-        const { fullName, gender, birthDay, occupation } =
-            person.getDetails();
+        const { fullName, gender, birthDay, occupation } = person.getDetails();
         let selectedGender;
 
         if (gender === "Male") {
@@ -197,6 +180,9 @@ function populateEditForm(editCard, personID) {
     }
 }
 
+// ==================================
+//  Event Listener Operations
+// ==================================
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {
         e.preventDefault(); // Prevent form submission refreshing the page because its annoying
