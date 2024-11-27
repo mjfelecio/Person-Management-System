@@ -26,7 +26,6 @@ function handleEditPerson() {
             ? document.querySelector("#modalBody #otherGender").value
             : document.querySelector("#modalBody #gender").value,
         birthDay: document.querySelector("#modalBody #birthDay").value,
-        age: document.querySelector("#modalBody #age").value,
         occupation: document.querySelector("#modalBody #occupation").value,
     };
 
@@ -63,7 +62,6 @@ function getFormInputs() {
             ? document.getElementById("otherGender").value.trim()
             : document.getElementById("gender").value.trim(),
         birthDay: document.getElementById("birthDay").value.trim(),
-        age: document.getElementById("age").value.trim(),
         occupation: document.getElementById("occupation").value.trim(),
     };
 }
@@ -189,7 +187,6 @@ function populateEditForm(editCard, personID) {
 
         form.querySelector("#fullName").value = fullName;
         form.querySelector("#birthDay").value = birthDay;
-        form.querySelector("#age").value = age;
         form.querySelector("#occupation").value = occupation;
         form.querySelector("#gender").value = selectedGender;
 

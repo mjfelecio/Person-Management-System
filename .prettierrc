@@ -1,15 +1,15 @@
 {
   "tabWidth": 4,
   "useTabs": false,
+  "singleAttributePerLine": false,
+  "htmlWhitespaceSensitivity": "css",
+  "bracketSameLine": true,
+  "printWidth": 120,
   "overrides": [
       {
           "files": "*.html",
           "options": {
-              "tabWidth": 2,
-              "singleAttributePerLine": false,
-              "htmlWhitespaceSensitivity": "css",
-              "bracketSameLine": true,
-              "printWidth": 120
+              "tabWidth": 2
           }
       }
   ]
