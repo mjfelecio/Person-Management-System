@@ -1,8 +1,5 @@
 import { PersonManager } from "./personManager.js";
-import { getFormInputs } from "./utilities.js";
 
-let isOtherGenderSelected;
-let isOtherGenderSelectedOnModal;
 const manager = new PersonManager();
 
 // ==================================
@@ -25,7 +22,7 @@ function handleEditPerson() {
     const modalBody = document.getElementById("modalBody");
     const personID = modalBody.dataset.editingPersonID; // Gets the id of the person getting edited 
 
-    const updatedData = getFormInputs(true);
+    const updatedData = getUpdatedData();
 
     try {
         const updatedPerson = manager.updatePerson(personID, updatedData);
@@ -81,80 +78,78 @@ function getUpdatedData() {
 // ==================================
 
 function openEditModal(personID) {
-    const editCard = initializeEditCard(); // Prepare the editCard before inserting it into the modal
-    const populatedEditCard = populateEditForm(editCard, personID); // Fills the form inside the card with the persons details
-
     const modalBody = document.getElementById("modalBody");
+    const editCard = initializeEditCard(personID); // Prepare the editCard before inserting it into the modal
+
     modalBody.innerHTML = "";
     modalBody.dataset.editingPersonID = personID; // Stores the id of the person getting edited
-
-    modalBody.appendChild(populatedEditCard);
+    modalBody.appendChild(editCard);
 
     const editModal = new bootstrap.Modal(document.getElementById("editModal"));
     editModal.show();
 }
 
-function initializeEditCard() {
+function initializeEditCard(personID) {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
     const editCard = inputDetailsCard.cloneNode(true);
 
-    const genderSelector = editCard.querySelector("#gender");
-    const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
-    const otherGenderInputInModal = editCard.querySelector("#otherGender");
+    const editForm = editCard.querySelector("#inputForm");
+    populateEditForm(editForm, personID); // Fills the form inside the card with the persons details
 
-    const inputForm = editCard.querySelector("#inputForm");
-    inputForm.reset(); // Clear the form inputs
-    inputForm.addEventListener("submit", (e) => e.preventDefault()); // Prevent the form refreshing the page
-
+    setupGenderSelectorOnModal(editCard);
+    
     // Hide unnecessary elements
-    editCard.classList.value = ""; // Clear the classlist to remove bootstrap classes
+    editCard.className = ""; // Clear the classlist to remove bootstrap classes
     editCard.querySelector("#detailsCardHeader").style.display = "none";
     editCard.querySelector("#headerSeparator").style.display = "none";
     editCard.querySelector("#submitButton").style.display = "none";
 
-    genderSelector.addEventListener("change", (e) => {
-        if (e.target.value === "Other") {
-            otherGenderContainerInModal.style.display = "block";
-            otherGenderInputInModal.setAttribute("required", true);
-            isOtherGenderSelectedOnModal = true;
-        } else {
-            otherGenderContainerInModal.style.display = "none";
-            otherGenderInputInModal.removeAttribute("required");
-            isOtherGenderSelectedOnModal = false;
-        }
-    });
-
     return editCard;
 }
 
-function populateEditForm(editCard, personID) {
-    const form = editCard.querySelector("#inputForm");
-    const otherGenderInput = form.querySelector("#otherGender");
-
+function populateEditForm(editForm, personID) {
     try {
         const person = manager.getPerson(personID);
+        if (!person) throw new Error(`Person with ID ${personID} not found.`);
+
         const { fullName, gender, birthDay, occupation } = person.getDetails();
-        let selectedGender;
+        const otherGenderInput = editForm.querySelector("#otherGender");
 
-        if (gender === "Male") {
-            selectedGender = "Male";
-        } else if (gender === "Female") {
-            selectedGender = "Female";
-        } else {
-            selectedGender = "Other";
-            otherGenderInput.value = gender;
+        editForm.reset();
+        editForm.addEventListener("submit", (e) => e.preventDefault());
+
+        // Populate form fields
+        editForm.querySelector("#fullName").value = fullName || "";
+        editForm.querySelector("#birthDay").value = birthDay || "";
+        editForm.querySelector("#occupation").value = occupation || "";
+        editForm.querySelector("#gender").value = gender === "Male" || gender === "Female" ? gender : "Other";
+
+        // If gender is "Other," show the other input
+        if (gender !== "Male" && gender !== "Female") {
+            if (otherGenderInput) {
+                otherGenderInput.value = gender;
+                otherGenderInput.style.display = "block";
+            }
         }
-
-        form.querySelector("#fullName").value = fullName;
-        form.querySelector("#birthDay").value = birthDay;
-        form.querySelector("#occupation").value = occupation;
-        form.querySelector("#gender").value = selectedGender;
-
-        return editCard;
     } catch (error) {
         console.error("Error populating form:", error.message);
-        return editCard;
     }
+}
+
+function setupGenderSelectorOnModal(editCard) {
+    const genderSelector = editCard.querySelector("#gender");
+    const otherGenderContainer = editCard.querySelector("#otherGenderContainer");
+    const otherGender = editCard.querySelector("#otherGender");
+
+    genderSelector.addEventListener("change", (e) => {
+        if (e.target.value === "Other") {
+            otherGenderContainer.style.display = "block";
+            otherGender.setAttribute("required", true);
+        } else {
+            otherGenderContainer.style.display = "none";
+            otherGender.removeAttribute("required");
+        }
+    });
 }
 
 // ==================================
