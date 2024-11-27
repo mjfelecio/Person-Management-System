@@ -1,26 +1,18 @@
-import {
-    createPerson,
-    editPerson,
-    generateUniqueID,
-    getPersonalDetails,
-    getPersonByID,
-    isPersonOnList,
-} from "./person.js";
+import { PersonManager } from "./personManager.js";
 
 let isOtherGenderSelected;
 let isOtherGenderSelectedOnModal;
+const manager = new PersonManager();
 
 function handleCreatePerson() {
-    const person = getFormInputs();
+    const personalDetails = getFormInputs();
 
-    // validateInputs();
-
-    if (!isPersonOnList(person)) {
-        createPerson(person);
-        addPersonToTable(person);
-    } else {
-        console.log("This person already exists.");
-        return;
+    try {
+        const person = manager.createPerson(personalDetails);
+        addPersonToTable(person.getDetails());
+        document.getElementById("inputForm").reset();
+    } catch (error) {
+        console.error("Error creating person:", error.message); //TODO: Show this to the UI later
     }
 }
 
@@ -28,7 +20,6 @@ function handleEditPerson() {
     const modalBody = document.getElementById("modalBody");
     const personID = modalBody.dataset.editingPersonID;
 
-    // Get form inputs
     const updatedData = {
         fullName: document.querySelector("#modalBody #fullName").value,
         gender: isOtherGenderSelectedOnModal
@@ -39,44 +30,44 @@ function handleEditPerson() {
         occupation: document.querySelector("#modalBody #occupation").value,
     };
 
-    //validateFormInput(person);
-    editPerson(updatedData); // Edit the personal details of the person in the personlist
+    try {
+        const updatedPerson = manager.updatePerson(personID, updatedData);
+        editPersonDataOnTable(personID, updatedPerson.getDetails());
 
-    editPersonDataOnTable(personID, updatedData);
-
-    // Hide the modal after submission
-    const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
-    editModal.hide();
+        const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
+        editModal.hide();
+    } catch (error) {
+        console.error("Error updating person:", error.message);
+    }
 }
 
-
 function getFormInputs() {
+    // validate this using validateFormInput before returning
     return {
-        fullName: document.getElementById("fullName").value,
+        fullName: document.getElementById("fullName").value.trim(),
         gender: isOtherGenderSelected
-            ? document.getElementById("otherGender").value
-            : document.getElementById("gender").value,
-        birthDay: document.getElementById("birthDay").value,
-        age: document.getElementById("age").value,
-        occupation: document.getElementById("occupation").value,
+            ? document.getElementById("otherGender").value.trim()
+            : document.getElementById("gender").value.trim(),
+        birthDay: document.getElementById("birthDay").value.trim(),
+        age: document.getElementById("age").value.trim(),
+        occupation: document.getElementById("occupation").value.trim(),
     };
 }
 
-function addPersonToTable(person) {
-    const { fullName, gender, birthDay, age, occupation } = person;
-    const personID = generateUniqueID(person);
+function addPersonToTable(personDetails) {
+    const { id, fullName, gender, birthDay, age, occupation } = personDetails;
     const tableBody = document.getElementById("tableBody");
 
     let row = tableBody.innerHTML;
-    row += `<tr class="t-row" data-row-reference-id="${personID}">
+    row += `<tr class="t-row" data-row-reference-id="${id}">
         <td class="align-middle">${fullName}</td>
         <td class="align-middle">${gender}</td>
         <td class="align-middle">${birthDay}</td>
         <td class="align-middle">${age}</td>
         <td class="align-middle">${occupation}</td>
         <td class="align-middle">
-            <button class="editButton btn btn-primary btn-sm" data-person-id="${personID}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
-            <button class="deleteButton btn btn-danger btn-sm" data-person-id="${personID}">Delete</button>
+            <button class="editButton btn btn-primary btn-sm" data-person-id="${id}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
+            <button class="deleteButton btn btn-danger btn-sm" data-person-id="${id}">Delete</button>
         </td>
     </tr>`;
     tableBody.innerHTML = row;
@@ -162,25 +153,32 @@ function initializeEditCard() {
 function populateEditForm(editCard, personID) {
     const form = editCard.querySelector("#inputForm");
     const otherGenderInput = form.querySelector("#otherGender");
-    const { fullName, gender, birthDay, age, occupation } = getPersonByID(personID);
-    let selectedGender;
 
-    if (gender === "male") {
-        selectedGender = "male";
-    } else if (gender === "female") {
-        selectedGender = "female";
-    } else {
-        selectedGender = "other";
-        otherGenderInput.value = gender;
+    try {
+        const person = manager.getPerson(personID);
+        const { fullName, gender, birthDay, age, occupation } = person.getDetails();
+        let selectedGender;
+
+        if (gender === "male") {
+            selectedGender = "male";
+        } else if (gender === "female") {
+            selectedGender = "female";
+        } else {
+            selectedGender = "other";
+            otherGenderInput.value = gender;
+        }
+
+        form.querySelector("#fullName").value = fullName;
+        form.querySelector("#birthDay").value = birthDay;
+        form.querySelector("#age").value = age;
+        form.querySelector("#occupation").value = occupation;
+        form.querySelector("#gender").value = selectedGender;
+
+        return editCard;
+    } catch (error) {
+        console.error("Error populating form:", error.message);
+        return editCard;
     }
-
-    form.querySelector("#fullName").value = fullName;
-    form.querySelector("#birthDay").value = birthDay;
-    form.querySelector("#age").value = age;
-    form.querySelector("#occupation").value = occupation;
-    form.querySelector("#gender").value = selectedGender;
-
-    return editCard;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
