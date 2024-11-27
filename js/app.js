@@ -34,10 +34,24 @@ function handleEditPerson() {
         const updatedPerson = manager.updatePerson(personID, updatedData);
         editPersonDataOnTable(personID, updatedPerson.getDetails());
 
-        const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
+        const editModal = bootstrap.Modal.getInstance(
+            document.getElementById("editModal")
+        );
         editModal.hide();
     } catch (error) {
         console.error("Error updating person:", error.message);
+    }
+}
+
+function handleDeletePerson(personID) {
+    try {
+        manager.deletePerson(personID);
+        const row = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
+        if (row) {
+            row.remove();
+        }
+    } catch (error) {
+        console.error("Error deleting person:", error.message);
     }
 }
 
@@ -76,24 +90,26 @@ function addPersonToTable(personDetails) {
 
 function editPersonDataOnTable(personID, updatedData) {
     // Find the specific row with the matching personID
-    const targetRow = document.querySelector(`tr[data-row-reference-id="${personID}"]`);
+    const targetRow = document.querySelector(
+        `tr[data-row-reference-id="${personID}"]`
+    );
     console.log(personID + " ha");
-    
+
     if (!targetRow) {
         console.error("Row not found");
         return;
     }
 
     // Get all data cells (except the actions cell with the edit and delete buttons)
-    const cells = targetRow.querySelectorAll('td:not(:last-child)');
-    
+    const cells = targetRow.querySelectorAll("td:not(:last-child)");
+
     // Map the data to match the order of cells
     const newValues = [
         updatedData.fullName,
         updatedData.gender,
         updatedData.birthDay,
         updatedData.age,
-        updatedData.occupation
+        updatedData.occupation,
     ];
 
     // Update each cell's content
@@ -121,7 +137,9 @@ function initializeEditCard() {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
     const editCard = inputDetailsCard.cloneNode(true);
     const genderSelector = editCard.querySelector("#gender");
-    const otherGenderContainerInModal = editCard.querySelector("#otherGenderContainer");
+    const otherGenderContainerInModal = editCard.querySelector(
+        "#otherGenderContainer"
+    );
     const otherGenderInputInModal = editCard.querySelector("#otherGender");
     const inputForm = editCard.querySelector("#inputForm");
 
@@ -156,7 +174,8 @@ function populateEditForm(editCard, personID) {
 
     try {
         const person = manager.getPerson(personID);
-        const { fullName, gender, birthDay, age, occupation } = person.getDetails();
+        const { fullName, gender, birthDay, age, occupation } =
+            person.getDetails();
         let selectedGender;
 
         if (gender === "male") {
@@ -195,7 +214,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("gender").addEventListener("change", (e) => {
-        const otherGenderContainer = document.getElementById("otherGenderContainer");
+        const otherGenderContainer = document.getElementById(
+            "otherGenderContainer"
+        );
         const otherGenderInput = document.getElementById("otherGender");
 
         if (e.target.value === "other") {
@@ -209,11 +230,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById("submitEditButton").addEventListener("click", (e) => {
-        e.preventDefault();
+    document
+        .getElementById("submitEditButton")
+        .addEventListener("click", (e) => {
+            e.preventDefault();
 
-        handleEditPerson();
-    });
+            handleEditPerson();
+        });
 });
 
 function attachActionButtonHandlers() {
@@ -223,6 +246,15 @@ function attachActionButtonHandlers() {
             let personID = this.dataset.personId;
 
             openEditModal(personID);
+        });
+    });
+
+    document.querySelectorAll(".deleteButton").forEach((button) => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            let personID = this.dataset.personId;
+
+            handleDeletePerson(personID);
         });
     });
 }
