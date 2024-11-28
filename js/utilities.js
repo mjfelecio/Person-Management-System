@@ -53,7 +53,7 @@ export function showAlert(type, message, title = "") {
     setTimeout(() => {
         const alert = bootstrap.Alert.getOrCreateInstance(alertElement);
         alert.close();
-    }, 5000);
+    }, 3000);
 }
 
 // ==================================

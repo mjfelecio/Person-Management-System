@@ -131,8 +131,6 @@ function populateEditForm(editForm, personID) {
         const otherGenderInput = editForm.querySelector("#otherGender");
         const otherGenderContainer = editForm.querySelector("#otherGenderContainer");
 
-        alert(gender);
-
         editForm.reset();
         editForm.addEventListener("submit", (e) => e.preventDefault());
 
@@ -151,10 +149,9 @@ function populateEditForm(editForm, personID) {
         } else {
             // Hide the otherGender field when the user inputs Male or Female on the otherGenderInput
             otherGenderContainer.style.display = "none";
-        }
-        
+        }  
     } catch (error) {
-        console.error("Error populating form:", error.message);
+        showAlert('error', error.message, "Error populating form");
     }
 }
 
