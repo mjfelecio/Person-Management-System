@@ -32,7 +32,7 @@ function handleEditPerson() {
 
         const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
         editModal.hide();
-        showAlert('success', "Person succesfully created");
+        showAlert('success', "Person succesfully edited");
     } catch (error) {
         showAlert('error', error.message, "Error editing person");
     }
@@ -82,7 +82,7 @@ function getUpdatedData() {
     };
 
     if (!validateForm(updatedData)) {
-        throw new Error("Validation failed for updated data.");
+        return null; 
     }
 
     return updatedData;
@@ -106,7 +106,7 @@ function openEditModal(personID) {
 
 function initializeEditCard(personID) {
     const inputDetailsCard = document.getElementById("inputDetailsCard");
-    const editCard = inputDetailsCard.cloneNode(true);
+    const editCard = inputDetailsCard.cloneNode(true); // Reuse the inputCard as editCard
 
     const editForm = editCard.querySelector("#inputForm");
     populateEditForm(editForm, personID); // Fills the form inside the card with the persons details

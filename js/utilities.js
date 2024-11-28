@@ -12,7 +12,6 @@ function createSuccessAlert(message) {
 
     const content = `
         <div class="d-flex align-items-center gap-3">
-            <i class="fas fa-check-circle fs-4"></i>
             <div>${message}</div>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -31,7 +30,6 @@ function createDangerAlert(title, message) {
 
     const content = `
         <div class="d-flex align-items-start gap-3">
-            <i class="fas fa-exclamation-circle fs-4"></i>
             <div class="d-flex flex-column">
                 ${title ? `<h6 class="mb-1">${title}</h6>` : ""}
                 <p class="mb-0">${message}</p>
@@ -99,7 +97,6 @@ function validateGender(gender) {
     if (!gender || gender.trim().length === 0) {
         errorMessage = "Gender is required";
     } else if (gender === "Other") {
-        // Additional validation for "Other"
         const otherGenderRegex = /^[a-zA-Z\s.\-']+$/;
         if (!otherGenderRegex.test(gender)) {
             errorMessage = "Gender contains invalid characters";

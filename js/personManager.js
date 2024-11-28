@@ -42,14 +42,4 @@ export class PersonManager {
         const id = Person.generateID(personalDetails);
         return this.#persons.has(id);
     }
-
-    // Get all persons
-    getAllPersons() {
-        return Array.from(this.#persons.values());
-    }
-
-    // Get count of persons
-    get count() {
-        return this.#persons.size;
-    }
 }
