@@ -4,6 +4,8 @@
 
 // Function to create success alert
 function createSuccessAlert(message) {
+    message = "✔&nbsp;" + message;
+
     const alertDiv = document.createElement("div");
     alertDiv.className = "alert alert-success alert-dismissible fade show";
     alertDiv.setAttribute("role", "alert");
@@ -22,6 +24,7 @@ function createSuccessAlert(message) {
 
 // Function to create danger alert
 function createDangerAlert(title, message) {
+    title = "⚠&nbsp;" + title;
     const alertDiv = document.createElement("div");
     alertDiv.className = "alert alert-danger alert-dismissible fade show";
     alertDiv.setAttribute("role", "alert");
@@ -60,85 +63,111 @@ export function showAlert(type, message, title = "") {
 // ==================================
 
 export function validateForm(formData) {
-    return (
-        validateName(formData.fullName) &&
-        validateGender(formData.gender) &&
-        validateBirthday(formData.birthDay) &&
-        validateOccupation(formData.occupation)
-    );
+    const isNameValid = validateName(formData.fullName);
+    const isGenderValid = validateGender(formData.gender);
+    const isBirthdayValid = validateBirthday(formData.birthDay);
+    const isOccupationValid = validateOccupation(formData.occupation);
+
+    return isNameValid && isGenderValid && isBirthdayValid && isOccupationValid;
 }
 
 // Validate full name
 function validateName(name) {
     let errorMessage;
-    let isValid = true;
 
     if (!name || name.trim().length === 0) {
-        throw new Error("Name is required");
-        isValid = false;
+        errorMessage = "Name is required";
+    } else {
+        const nameRegex = /^[a-zA-Z\s.\-']+$/;
+        if (!nameRegex.test(name)) {
+            errorMessage = "Name contains invalid characters";
+        }
     }
 
-    // Check if name contains only letters, spaces, and common special characters
-    const nameRegex = /^[a-zA-Z\s.\-']+$/;
-    if (!nameRegex.test(name)) {
-        throw new Error("Name contains invalid characters");
+    if (errorMessage) {
+        showAlert('error', errorMessage, "Invalid Name");
+        return false;
+    } else {
+        return true;
     }
-    showAlert();
-
-    return isValid;
 }
 
 // Validate gender
 function validateGender(gender) {
+    let errorMessage;
+
     if (!gender || gender.trim().length === 0) {
-        throw new Error("Gender is required");
+        errorMessage = "Gender is required";
+    } else if (gender === "Other") {
+        // Additional validation for "Other"
+        const otherGenderRegex = /^[a-zA-Z\s.\-']+$/;
+        if (!otherGenderRegex.test(gender)) {
+            errorMessage = "Gender contains invalid characters";
+        }
+    } else {
+        // Check if gender is one of the valid preset options
+        const validGenders = ["Male", "Female"];
+        if (!validGenders.includes(gender)) {
+            errorMessage = "Invalid gender selection";
+        }
     }
 
-    // If it's "Other", any non-empty string is valid
-    if (gender === "Other") {
+    if (errorMessage) {
+        showAlert('error', errorMessage, "Invalid Gender");
+        return false;
+    } else {
         return true;
-    }
-
-    // For preset options, check if it's one of the valid values
-    const validGenders = ["Male", "Female"];
-    if (!validGenders.includes(gender)) {
-        throw new Error("Invalid gender selection");
     }
 }
 
 // Validate birthday
 function validateBirthday(birthday) {
+    let errorMessage;
+
     if (!birthday) {
-        throw new Error("Birthday is required");
+        errorMessage = "Birthday is required";
+    } else {
+        const birthDate = new Date(birthday);
+        const today = new Date();
+
+        if (isNaN(birthDate.getTime())) {
+            errorMessage = "Invalid date format";
+        } else if (birthDate > today) {
+            errorMessage = "Birthday cannot be in the future";
+        } else {
+            const age = today.getFullYear() - birthDate.getFullYear();
+            if (age < 0 || age > 150) {
+                errorMessage = "Invalid age range";
+            }
+        }
     }
 
-    const birthDate = new Date(birthday);
-    const today = new Date();
-
-    if (isNaN(birthDate.getTime())) {
-        throw new Error("Invalid date format");
-    }
-
-    if (birthDate > today) {
-        throw new Error("Birthday cannot be in the future");
-    }
-
-    // Basic age validation (0-150 years)
-    const age = today.getFullYear() - birthDate.getFullYear();
-    if (age > 150 || age < 0) {
-        throw new Error("Invalid age range");
+    if (errorMessage) {
+        showAlert('error', errorMessage, "Invalid Birthday");
+        return false;
+    } else {
+        return true;
     }
 }
 
 // Validate occupation
 function validateOccupation(occupation) {
+    let errorMessage;
+
     if (!occupation || occupation.trim().length === 0) {
-        throw new Error("Occupation is required");
+        errorMessage = "Occupation is required";
+    } else {
+        const occupationRegex = /^[a-zA-Z0-9\s\-&()]+$/;
+        if (!occupationRegex.test(occupation)) {
+            errorMessage = "Occupation contains invalid characters";
+        }
     }
 
-    // Check if occupation contains only letters, numbers, spaces, and common special characters
-    const occupationRegex = /^[a-zA-Z0-9\s\-&()]+$/;
-    if (!occupationRegex.test(occupation)) {
-        throw new Error("Occupation contains invalid characters");
+    if (errorMessage) {
+        showAlert('error', errorMessage, "Invalid Occupation");
+        return false;
+    } else {
+        return true;
     }
 }
+

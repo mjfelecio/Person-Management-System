@@ -10,13 +10,13 @@ const manager = new PersonManager();
 function handleCreatePerson() {
     const personalDetails = getFormInputs();
 
-    if (personalDetails) {
+    try {
         const person = manager.createPerson(personalDetails);
         addPersonToTable(person.getDetails());
         document.getElementById("inputForm").reset();
-        showAlert('success', "Person succesfully created.");
-    } else {
-        showAlert('error', "Person creation failed.");
+        showAlert('success', "Person succesfully created");
+    } catch (error) {
+        showAlert('error', error.message, "Error creating person");
     }
 }
 
@@ -32,8 +32,9 @@ function handleEditPerson() {
 
         const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
         editModal.hide();
+        showAlert('success', "Person succesfully created");
     } catch (error) {
-        console.error("Error updating person:", error.message);
+        showAlert('error', error.message, "Error editing person");
     }
 }
 
@@ -44,8 +45,9 @@ function handleDeletePerson(personID) {
         if (row) {
             row.remove();
         }
+        showAlert('success', "Person succesfully deleted");
     } catch (error) {
-        console.error("Error deleting person:", error.message);
+        showAlert('error', error.message, "Error deleting person");
     }
 }
 
@@ -61,32 +63,29 @@ function getFormInputs() {
             : document.getElementById("gender").value.trim(),
         birthDay: document.getElementById("birthDay").value.trim(),
         occupation: document.getElementById("occupation").value.trim(),
-    }; 
-    
-    if (!true) {
-        return;
-    } else {
-        return formData;
+    };
+
+    if (!validateForm(formData)) {
+        return null; // Validation failed
     }
+    return formData; // Validation passed
 }
 
 function getUpdatedData() {
-    const editForm = document.querySelector("#modalBody #inputForm");
+    const updatedData = {
+        fullName: document.querySelector("#modalBody #fullName").value.trim(),
+        gender: document.querySelector("#modalBody #gender").value === "Other"
+            ? document.querySelector("#modalBody #otherGender").value.trim()
+            : document.querySelector("#modalBody #gender").value.trim(),
+        birthDay: document.querySelector("#modalBody #birthDay").value.trim(),
+        occupation: document.querySelector("#modalBody #occupation").value.trim(),
+    };
 
-    // Use the built in validity functions to check validity of the inputs in form
-    if (!editForm.checkValidity()) {
-        editForm.reportValidity(); // Shows validation errors in the UI
-        throw new Error("Error getting data, form is incomplete")
+    if (!validateForm(updatedData)) {
+        throw new Error("Validation failed for updated data.");
     }
 
-    return {
-        fullName: document.querySelector("#modalBody #fullName").value,
-        gender: document.querySelector("#modalBody #gender").value === "Other"
-            ? document.querySelector("#modalBody #otherGender").value
-            : document.querySelector("#modalBody #gender").value,
-        birthDay: document.querySelector("#modalBody #birthDay").value,
-        occupation: document.querySelector("#modalBody #occupation").value,
-    };
+    return updatedData;
 }
 
 // ==================================
@@ -250,10 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputForm").addEventListener("submit", (e) => {
         e.preventDefault();
 
-        // Use the built in validity functions to check validity of the inputs in form
-        if (!inputForm.checkValidity()) {
-            inputForm.reportValidity(); // Shows validation errors in the UI
-            return;
+        const formData = getFormInputs();
+        if (!formData) {
+            return; // Custom validation failed
         }
 
         handleCreatePerson();
@@ -277,5 +275,3 @@ document.addEventListener("DOMContentLoaded", () => {
         handleEditPerson();
     });
 });
-
-

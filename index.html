@@ -22,7 +22,7 @@
           <div id="inputDetailsCard" class="rounded-3 border border-3 border-secondary shadow text-bg-light p-3 h-100">
             <h3 class="text-center" id="detailsCardHeader">Personal Details</h3>
             <hr id="headerSeparator" />
-            <form name="inputForm" id="inputForm">
+            <form name="inputForm" id="inputForm" novalidate>
               <!-- Full Name -->
               <div class="mb-3">
                 <label for="fullName" class="form-label">Full Name</label>
@@ -116,7 +116,8 @@
       <div
         class="position-fixed bottom-0 start-50 translate-middle-x mb-4 mx-auto"
         style="z-index: '1050'; min-width: '300px'; max-width: '500px'"
-        id="alertContainer"></div>
+        id="alertContainer">
+      </div>
     </div>
     <script type="module" src="/js/script.js"></script>
     <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
