@@ -1,7 +1,6 @@
 import { PersonManager } from "./personManager.js";
 
 const manager = new PersonManager();
-let isOtherGenderSelected;
 
 // ==================================
 //  Main Functions
@@ -248,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inputForm.reportValidity(); // Shows validation errors in the UI
             return;
         }
+
         handleCreatePerson();
     });
 
@@ -258,11 +258,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.value === "Other") {
             otherGenderContainer.style.display = "block";
             otherGenderInput.setAttribute("required", true);
-            isOtherGenderSelected = true;
         } else {
             otherGenderContainer.style.display = "none";
             otherGenderInput.removeAttribute("required");
-            isOtherGenderSelected = false;
         }
     });
 
