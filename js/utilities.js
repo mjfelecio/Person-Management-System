@@ -94,18 +94,12 @@ function validateName(name) {
 function validateGender(gender) {
     let errorMessage;
 
-    if (!gender || gender.trim().length === 0) {
+    if (!gender || gender.trim().length === 0 || gender === "Select their gender") {
         errorMessage = "Gender is required";
-    } else if (gender === "Other") {
+    } else {
         const otherGenderRegex = /^[a-zA-Z\s.\-']+$/;
         if (!otherGenderRegex.test(gender)) {
             errorMessage = "Gender contains invalid characters";
-        }
-    } else {
-        // Check if gender is one of the valid preset options
-        const validGenders = ["Male", "Female"];
-        if (!validGenders.includes(gender)) {
-            errorMessage = "Invalid gender selection";
         }
     }
 
