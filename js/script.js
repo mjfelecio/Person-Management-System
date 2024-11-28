@@ -1,4 +1,5 @@
 import { PersonManager } from "./personManager.js";
+import { showAlert, validateForm } from "./utilities.js";
 
 const manager = new PersonManager();
 
@@ -9,12 +10,13 @@ const manager = new PersonManager();
 function handleCreatePerson() {
     const personalDetails = getFormInputs();
 
-    try {
+    if (personalDetails) {
         const person = manager.createPerson(personalDetails);
         addPersonToTable(person.getDetails());
         document.getElementById("inputForm").reset();
-    } catch (error) {
-        console.error("Error creating person:", error.message); //TODO: Show this to the UI later
+        showAlert('success', "Person succesfully created.");
+    } else {
+        showAlert('error', "Person creation failed.");
     }
 }
 
@@ -52,14 +54,20 @@ function handleDeletePerson(personID) {
 // ==================================
 
 function getFormInputs() {
-    return {
+    const formData = {
         fullName: document.getElementById("fullName").value.trim(),
         gender: document.getElementById("gender").value === "Other"
             ? document.getElementById("otherGender").value.trim()
             : document.getElementById("gender").value.trim(),
         birthDay: document.getElementById("birthDay").value.trim(),
         occupation: document.getElementById("occupation").value.trim(),
-    };
+    }; 
+    
+    if (!true) {
+        return;
+    } else {
+        return formData;
+    }
 }
 
 function getUpdatedData() {

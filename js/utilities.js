@@ -1,14 +1,81 @@
 // ==================================
+//  User Feedback Functions
+// ==================================
+
+// Function to create success alert
+function createSuccessAlert(message) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = "alert alert-success alert-dismissible fade show";
+    alertDiv.setAttribute("role", "alert");
+
+    const content = `
+        <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-check-circle fs-4"></i>
+            <div>${message}</div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    alertDiv.innerHTML = content;
+    return alertDiv;
+}
+
+// Function to create danger alert
+function createDangerAlert(title, message) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = "alert alert-danger alert-dismissible fade show";
+    alertDiv.setAttribute("role", "alert");
+
+    const content = `
+        <div class="d-flex align-items-start gap-3">
+            <i class="fas fa-exclamation-circle fs-4"></i>
+            <div class="d-flex flex-column">
+                ${title ? `<h6 class="mb-1">${title}</h6>` : ""}
+                <p class="mb-0">${message}</p>
+            </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    alertDiv.innerHTML = content;
+    return alertDiv;
+}
+
+// Function to show alert in a container
+export function showAlert(type, message, title = "") {
+    const alertElement = type === "success" ? createSuccessAlert(message) : createDangerAlert(title, message);
+    const container = document.getElementById("alertContainer");
+
+    // Add the new alert
+    container.appendChild(alertElement);
+
+    setTimeout(() => {
+        const alert = bootstrap.Alert.getOrCreateInstance(alertElement);
+        alert.close();
+    }, 5000);
+}
+
+// ==================================
 //  Validation Functions
 // ==================================
+
+export function validateForm(formData) {
+    return (
+        validateName(formData.fullName) &&
+        validateGender(formData.gender) &&
+        validateBirthday(formData.birthDay) &&
+        validateOccupation(formData.occupation)
+    );
+}
+
 // Validate full name
 function validateName(name) {
+    let errorMessage;
+    let isValid = true;
+
     if (!name || name.trim().length === 0) {
         throw new Error("Name is required");
-    }
-    
-    if (name.trim().length < 2) {
-        throw new Error("Name must be at least 2 characters long");
+        isValid = false;
     }
 
     // Check if name contains only letters, spaces, and common special characters
@@ -16,6 +83,9 @@ function validateName(name) {
     if (!nameRegex.test(name)) {
         throw new Error("Name contains invalid characters");
     }
+    showAlert();
+
+    return isValid;
 }
 
 // Validate gender
@@ -66,32 +136,9 @@ function validateOccupation(occupation) {
         throw new Error("Occupation is required");
     }
 
-    if (occupation.trim().length < 2) {
-        throw new Error("Occupation must be at least 2 characters long");
-    }
-
     // Check if occupation contains only letters, numbers, spaces, and common special characters
     const occupationRegex = /^[a-zA-Z0-9\s\-&()]+$/;
     if (!occupationRegex.test(occupation)) {
         throw new Error("Occupation contains invalid characters");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ==================================
-//  User Utilities
-// ==================================
